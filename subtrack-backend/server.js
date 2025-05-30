@@ -10,19 +10,22 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
-    res.send('Hello, World!');
-  });
+    res.status(200).json('Hello, World!');
+});
   
+// Import routes
+const userRoutes = require('./routes/user.routes');
+const authRoutes = require('./routes/auth.routes');
+const paymentRoutes = require('./routes/payment.routes');
+const webhookRoutes = require('./routes/webhook.routes');
 
-// mongoose.connect(process.env.MONGO_URI).then(() =>{
-//     console.log('Connected to MongoDB');
-//     app.listen(process.env.PORT || 5000, () => {
-//         console.log(`Server is running on port ${process.env.PORT || 5000}`);
-//     })
-// }).catch((err) => {
-//     console.error('Error connecting to MongoDB:', err);
-//     process.exit(1);
-// });
+// Use routes
+app.use("/api/v1/users", userRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('api/v1/payments', paymentRoutes);
+
+// Webhook route for razorpay
+app.use('/api/v1/webhook', webhookRoutes);
 
 try {
     if(connectDB()){
