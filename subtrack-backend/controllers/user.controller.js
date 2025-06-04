@@ -38,13 +38,21 @@ const loginUser = async (req, res) => {
        return res.status(404).json({message: "Invalid email or password"});
     }
 
+    const token = generateToken(user._id);
+    res.cookie("token", token,{
+        httpOnly: true,
+        secure: process.env.NODE_ENV == "production",
+        samSite: "Strict",
+        maxAge: 24 * 60 * 60 * 1000
+    });
+
     res.status(200).json({
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
         isSubscribed: user.isSubscribed,
-        token: generateToken(user._id)
+        // token: token
     });
 }
 
