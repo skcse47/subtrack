@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 
-getuser()
+// getuser()
 app.get('/', (req, res) => {
     res.status(200).json('Hello, World!');
 });
