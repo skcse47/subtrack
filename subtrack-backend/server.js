@@ -3,10 +3,23 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db'); 
 const {getuser} = require('./practice')
+const cookieParser = require('cookie-parser');
+const limiter = require('./utils/rateLimit');
+
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser())
+
+// Apply rate limit to all requests
+
+// const limiter = rateLimiter({
+//     windowMs: 15 * 60 * 1000,
+//     max: 5,
+//     message: 'Too many request from this IP'
+// });
+// app.use(limiter);
 
 
 // getuser()
