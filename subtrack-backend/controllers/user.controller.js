@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const redisClient = require("../utils/redisClient");
 const generateToken = require("../utils/token");
 
 const registerUser = async (req, res) => {
@@ -56,5 +57,32 @@ const loginUser = async (req, res) => {
     });
 }
 
+const userProfile = async(req, res) => {
+    const userId = req.user._id;
 
-module.exports = {loginUser, registerUser};
+    try {
+        const cachedUser = await redisClient.get(`user:${userId}`);
+        console.log(cachedUser)
+        if(cachedUser){
+            return res.status(200).json(JSON.parse(cachedUser));
+        }
+
+        const userData = await User.findById(userId).select("-password");
+
+        if(!userData){
+            return res.status(404).json({message: "No user found."})
+        }
+
+        //set user in redis 
+        await redisClient.setEx(`user:${userId}`, 3600, JSON.stringify(userData));
+
+        res.status(200).json(userData);
+
+    } catch (error) {
+        
+    }
+
+}
+
+
+module.exports = {loginUser, registerUser, userProfile};
