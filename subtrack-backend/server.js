@@ -4,7 +4,6 @@ const cors = require('cors');
 const connectDB = require('./config/db'); 
 const {getuser} = require('./practice')
 const cookieParser = require('cookie-parser');
-const limiter = require('./utils/rateLimit');
 
 dotenv.config();
 const app = express();
