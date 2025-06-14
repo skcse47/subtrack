@@ -10,6 +10,6 @@ router.get('/', (req, res) => {
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.get('/userProfile', limiter, protect, userProfile);
+router.get('/userProfile', protect, userProfile);
 
 module.exports = router;

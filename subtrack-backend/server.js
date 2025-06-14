@@ -35,7 +35,7 @@ const webhookRoutes = require('./routes/webhook.routes');
 // Use routes
 app.use("/api/v1/users", userRoutes);
 app.use('/api/v1/auth', authRoutes);
-app.use('api/v1/payments', paymentRoutes);
+app.use('/api/v1/payment', paymentRoutes);
 
 // Webhook route for razorpay
 app.use('/api/v1/webhook', webhookRoutes);

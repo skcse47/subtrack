@@ -40,32 +40,34 @@ const loginUser = async (req, res) => {
     }
 
     const token = generateToken(user._id);
+    res.clearCookie('token');
     res.cookie("token", token,{
         httpOnly: true,
         secure: process.env.NODE_ENV == "production",
         samSite: "Strict",
         maxAge: 24 * 60 * 60 * 1000
     });
-
+    await redisClient.setEx(`user:${user._id}`, 3600, JSON.stringify(user));
+    
     res.status(200).json({
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
         isSubscribed: user.isSubscribed,
-        // token: token
-    });
+        token: token
+    },);
 }
 
 const userProfile = async(req, res) => {
     const userId = req.user._id;
 
     try {
-        const cachedUser = await redisClient.get(`user:${userId}`);
-        console.log(cachedUser)
-        if(cachedUser){
-            return res.status(200).json(JSON.parse(cachedUser));
-        }
+        // const cachedUser = await redisClient.get(`user:${userId}`);
+        // console.log(cachedUser)
+        // if(cachedUser){
+        //     return res.status(200).json(JSON.parse(cachedUser));
+        // }
 
         const userData = await User.findById(userId).select("-password");
 
