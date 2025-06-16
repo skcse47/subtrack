@@ -7,10 +7,13 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config();
 const app = express();
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 app.use(cookieParser())
-
+app.use(cors({
+    origin: 'http://localhost:5173', // Explicitly allow your frontend origin
+    credentials: true,              // Allow credentials (cookies, etc.)
+  }));
 // Apply rate limit to all requests
 
 // const limiter = rateLimiter({
