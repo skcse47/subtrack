@@ -70,9 +70,11 @@ const razorpayWebhook = async (req, res) => {
         // process event
         const event = req.body.event;
         const payload = req.body.payload;
+        const userid = req.body.payload.payment.entity.notes.userId;
 
         if(event == 'payment.captured'){
             const paymentEntity = payload.payment.entity;
+            await User.findByIdAndUpdate(userid, {isSubscribed: true});
             console.log("Payment captured:", paymentEntity);
 
             res.status(200).json({message: "payment capture webhook"});
